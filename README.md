@@ -50,7 +50,7 @@ dsh plugin --profile web add github:clair0314/dsh-bilibili-viral
 安装后技能 `bilibili-viral` 会出现在 DSH 的技能目录里。插件只负责注册技能；Python 运行环境仍需克隆仓库并 bootstrap：
 
 ```bash
-git clone git@github.com:clair0314/dsh-bilibili-viral.git ~/.bili-viral
+git clone https://github.com/clair0314/dsh-bilibili-viral.git ~/.bili-viral
 cd ~/.bili-viral
 bash scripts/bootstrap.sh
 ```
@@ -58,7 +58,7 @@ bash scripts/bootstrap.sh
 ### 方式 B：本地克隆（推荐首次使用）
 
 ```bash
-git clone git@github.com:clair0314/dsh-bilibili-viral.git ~/.bili-viral
+git clone https://github.com/clair0314/dsh-bilibili-viral.git ~/.bili-viral
 cd ~/.bili-viral
 bash scripts/bootstrap.sh
 ```
