@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Validate bundle
+        run: node scripts/validate-bundle.mjs
+      - name: Pack plugin
+        run: |
+          npm pack
+          cp dsh-bilibili-viral-*.tgz dsh-bilibili-viral.tgz
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dsh-bilibili-viral.tgz
+          generate_release_notes: true

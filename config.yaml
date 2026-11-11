@@ -1,0 +1,158 @@
+# B站爆款雷达配置
+# 改完直接跑：python3 -m bili_viral collect --days 7
+project:
+  name: B站爆款雷达
+  timezone: Asia/Shanghai
+  data_dir: data
+  output_dir: output
+  retention_days: 90
+  disk_guard_gb: 1.5
+
+creator:
+  niche:
+    - AI工具/效率实操
+    - 副业/搞钱/个人IP
+  face_on_camera: false
+  production: 录屏 + 口播/字幕卡
+  videos_per_week: 5
+  video_length: 3-6min
+  publish_days: [Mon, Tue, Wed, Thu, Fri]
+  strengths:
+    - AI工具实操
+    - 效率工作流
+    - 副业案例拆解
+
+keywords:
+  - {term: "AI工具 教程", group: "AI效率", weight: 1.0}
+  - {term: "AI 工作流", group: "AI效率", weight: 1.0}
+  - {term: "AI 提效", group: "AI效率", weight: 1.0}
+  - {term: "DeepSeek 教程", group: "AI效率", weight: 1.0}
+  - {term: "AI Agent 教程", group: "AI效率", weight: 1.0}
+  - {term: "AI 编程 实战", group: "AI效率", weight: 1.0}
+  - {term: "WorkBuddy 教程", group: "AI效率", weight: 1.0}
+  - {term: "AI 副业", group: "副业变现", weight: 1.0}
+  - {term: "AI 接单", group: "副业变现", weight: 1.0}
+  - {term: "个人IP 起号", group: "副业变现", weight: 1.0}
+
+filters:
+  window_days: 7
+  daily_window_days: 2
+  min_play: 10000
+  min_duration_s: 60
+  max_duration_s: 2700
+  block_categories:
+    - 音乐
+    - 影视
+    - 娱乐
+    - 游戏
+    - 动画
+    - 鬼畜
+    - 舞蹈
+    - 时尚
+    - 美食
+    - 动物
+    - 搞笑
+  category_allow:
+    - 科技
+    - 计算机
+    - 职场
+    - 财经
+    - 知识
+    - 教育
+    - 数码
+    - 商业
+  block_title_patterns:
+    - 小曲
+    - 鬼畜
+    - 混剪
+    - 直播回放
+    - 预告
+    - 花絮
+    - 纯音乐
+    - MMD
+    - 游戏实况
+    - 大肥鱼
+    - 鲸鱼
+    - 梁文峰
+    - 抽象
+    - 整活
+    - 漫剧
+    - 短剧
+    - 外卖
+    - 封号
+    - 泡沫
+    - 党争
+    - 日网
+    - 热帖
+    - 被玩坏
+    - 离谱
+    - 配音
+    - 有声书
+    - 3D建模
+    - 动画
+    - 影视
+    - 音乐
+    - 赛事
+    - 剧情
+    - 沙雕
+    - 表情包
+    - 虚拟主播
+    - 理财
+    - 存钱
+    - 基金
+    - 股票
+    - 财富
+    - 三国
+    - 魏蜀吴
+    - 小说
+    - 大女主
+    - 兽世
+    - 娱乐圈
+    - 神豪
+    - 剧本
+    - 外挂
+    - 破甲
+    - 渗透
+    - 失业
+    - 一败涂地
+    - 下线
+    - 时代结束
+    - 肥鱼
+  exclude_paid: true
+
+limits:
+  max_videos_per_run: 120
+  max_details: 30
+  max_transcripts: 15
+  max_covers: 30
+  requests_per_second: 0.8
+  search_pages: 2
+
+scoring:
+  weights:
+    play: 0.45
+    velocity: 0.25
+    engagement: 0.20
+    breakout: 0.10
+  hot_score: 75
+  hot_play: 100000
+
+cookies:
+  browser: chrome
+  cache_ttl_days: 7
+  cache_file: cookies/bilibili.json
+
+cover:
+  font: "/System/Library/Fonts/STHeiti Medium.ttc"
+  fallback_fonts:
+    - "/System/Library/Fonts/STHeiti Light.ttc"
+    - "/System/Library/Fonts/Supplemental/Songti.ttc"
+  size: [1280, 720]
+  variants: 2
+  download_width: 800
+  download_height: 450
+
+schedule:
+  daily_time: "09:00"
+  timezone: Asia/Shanghai
+  weekly_day: Mon

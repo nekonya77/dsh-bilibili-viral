@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>B站爆款雷达 · {{ data.date }}</title>
+<style>
+:root {
+  --bg: #0b0d12;
+  --bg2: #12151d;
+  --panel: #171b25;
+  --panel2: #1d2230;
+  --line: #2a3142;
+  --text: #eef1f7;
+  --muted: #9aa3b5;
+  --pink: #fb7299;
+  --pink2: #ff9db8;
+  --cyan: #00aeec;
+  --yellow: #ffd400;
+  --green: #39d98a;
+  --red: #ff5a5f;
+  --radius: 16px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 700px at 85% -10%, rgba(251,114,153,.18), transparent 60%),
+              radial-gradient(900px 500px at -10% 20%, rgba(0,174,236,.12), transparent 55%),
+              var(--bg);
+  color: var(--text);
+  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--pink2); text-decoration: none; }
+a:hover { color: #fff; text-decoration: underline; }
+img { max-width: 100%; display: block; }
+.wrap { width: min(1200px, calc(100% - 40px)); margin: 0 auto; }
+.hero { padding: 56px 0 28px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.eyebrow { color: var(--pink); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; }
+h1 { margin: 10px 0 12px; font-size: clamp(34px, 5vw, 58px); line-height: 1.12; letter-spacing: -.02em; }
+h1 span { color: var(--pink); }
+.hero p { color: var(--muted); max-width: 760px; margin: 0 0 24px; font-size: 16px; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 28px 0 24px; }
+.stat { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.stat b { display: block; font-size: 28px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 12px; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--text); font-weight: 600; font-size: 14px; }
+.btn:hover { text-decoration: none; border-color: var(--pink); color: #fff; }
+.btn.primary { background: var(--pink); border-color: var(--pink); color: #1a0710; }
+.btn.primary:hover { background: var(--pink2); }
+main { padding: 34px 0 80px; }
+section { margin: 0 0 44px; scroll-margin-top: 18px; }
+.sec-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.sec-head h2 { margin: 0; font-size: 24px; letter-spacing: -.01em; }
+.sec-head p { margin: 0; color: var(--muted); font-size: 13px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.top-card { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.top-card .cover { aspect-ratio: 16/9; background: var(--panel2); }
+.top-card .cover img { width: 100%; height: 100%; object-fit: cover; }
+.top-card .body { padding: 14px 16px 16px; }
+.top-card h3 { margin: 6px 0 8px; font-size: 16px; line-height: 1.45; }
+.top-card .meta { color: var(--muted); font-size: 12px; }
+.rank-badge { position: absolute; top: 10px; left: 10px; background: var(--pink); color: #1a0710; font-weight: 800; border-radius: 8px; padding: 3px 9px; font-size: 13px; }
+.score-pill { display: inline-block; background: rgba(255,212,0,.12); color: var(--yellow); border: 1px solid rgba(255,212,0,.3); padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 0 0 14px; }
+.search { flex: 1 1 260px; min-width: 200px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; color: var(--text); padding: 10px 13px; font-size: 14px; outline: none; }
+.search:focus { border-color: var(--pink); }
+select { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; color: var(--text); padding: 10px 12px; font-size: 14px; }
+.chip { background: transparent; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 7px 13px; cursor: pointer; font-size: 13px; }
+.chip:hover { color: #fff; border-color: var(--pink); }
+.chip.active { background: var(--pink); border-color: var(--pink); color: #1a0710; font-weight: 700; }
+.table-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid rgba(255,255,255,.055); vertical-align: middle; font-size: 13px; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .04em; background: rgba(255,255,255,.025); position: sticky; top: 0; }
+tbody tr:hover { background: rgba(251,114,153,.06); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.title-cell { min-width: 280px; }
+td.title-cell a { color: var(--text); font-weight: 600; }
+td.title-cell a:hover { color: var(--pink2); }
+.thumb { width: 96px; aspect-ratio: 16/9; object-fit: cover; border-radius: 7px; border: 1px solid var(--line); }
+.meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.tag { display: inline-block; padding: 2px 7px; border-radius: 999px; background: rgba(57,217,138,.12); color: var(--green); font-size: 11px; }
+.tag.muted { background: rgba(154,163,181,.12); color: var(--muted); }
+.tag.hot { background: rgba(251,114,153,.14); color: var(--pink2); }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.topic-card, .formula-card, .script-card, .ops-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.topic-card h3 { margin: 6px 0 8px; font-size: 18px; }
+.topic-card p { color: var(--muted); margin: 0 0 10px; }
+.topic-card ul { margin: 0 0 12px; padding-left: 18px; color: #cfd5e3; font-size: 13px; }
+.topic-card li { margin: 2px 0; }
+.ref-line { border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); font-size: 12px; }
+.cover-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.sheet { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.sheet img { width: 100%; height: auto; }
+.sheet .cap { padding: 10px 14px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); }
+.formula-card h3 { margin: 0 0 6px; font-size: 17px; }
+.formula-card .when { color: var(--pink2); font-size: 12px; margin-bottom: 10px; }
+.formula-card dl { margin: 0; display: grid; grid-template-columns: 74px 1fr; gap: 6px 10px; font-size: 13px; }
+.formula-card dt { color: var(--muted); }
+.formula-card dd { margin: 0; color: #dbe1ee; }
+.script-list { display: grid; gap: 10px; }
+.script-card { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 14px 18px; }
+.script-card .s-title { font-weight: 700; }
+.script-card .s-meta { color: var(--muted); font-size: 12px; }
+.script-card .s-links { display: flex; gap: 8px; flex-shrink: 0; }
+.empty { border: 1px dashed var(--line); border-radius: var(--radius); padding: 26px; color: var(--muted); background: rgba(255,255,255,.02); }
+.empty b { color: var(--text); }
+.plan-banner { display: flex; justify-content: space-between; gap: 16px; align-items: center; background: linear-gradient(120deg, rgba(251,114,153,.16), rgba(0,174,236,.1)); border: 1px solid rgba(251,114,153,.35); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; }
+.plan-banner h3 { margin: 0 0 4px; font-size: 20px; }
+.plan-banner p { margin: 0; color: var(--muted); font-size: 13px; }
+.plan-table td { vertical-align: top; }
+.plan-table td:nth-child(4) { white-space: nowrap; }
+.plan-cover { width: 150px; border-radius: 8px; border: 1px solid var(--line); }
+.plan-cover + .plan-cover { margin-top: 6px; }
+.ops-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+.run-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.055); font-size: 13px; }
+.run-row:last-child { border-bottom: 0; }
+.run-status { font-weight: 700; }
+.run-status.ok { color: var(--green); }
+.run-status.error { color: var(--red); }
+.run-status.running { color: var(--yellow); }
+.bars { display: grid; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: 92px 1fr 30px; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); }
+.bar { height: 7px; border-radius: 999px; background: var(--panel2); overflow: hidden; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--pink), var(--cyan)); }
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.how .step { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.how .step b { color: var(--pink2); }
+footer { border-top: 1px solid rgba(255,255,255,.07); padding: 24px 0 50px; color: var(--muted); font-size: 12px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+@media (max-width: 980px) {
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid3, .cards, .cover-grid, .how { grid-template-columns: 1fr 1fr; }
+  .ops-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .wrap { width: calc(100% - 24px); }
+  .hero { padding-top: 34px; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .grid3, .cards, .cover-grid, .how { grid-template-columns: 1fr; }
+  .table-wrap { overflow-x: auto; }
+  th, td { white-space: nowrap; }
+  .thumb { width: 76px; }
+  .plan-banner { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">B站爆款雷达 / {{ data.date }}</div>
+    <h1>今天拍什么，<span>数据说了算。</span></h1>
+    <p>每天抓取 AI 工具、副业与个人 IP 赛道的爆款，拆选题、存逐字稿、提炼封面公式。周一只做一件事：把 5 条能拍的内容排进日历。</p>
+    <div class="stats">
+      <div class="stat"><b>{{ data.stats.videos }}</b><span>累计视频</span></div>
+      <div class="stat"><b>{{ data.stats.hot }}</b><span>爆款标记</span></div>
+      <div class="stat"><b>{{ data.stats.with_transcript }}</b><span>已有字幕</span></div>
+      <div class="stat"><b>{{ data.stats.groups }}</b><span>内容方向</span></div>
+      <div class="stat"><b>{{ data.stats.last_status }}</b><span>最近运行 · {{ data.stats.last_run }}</span></div>
+    </div>
+    <div class="hero-actions">
+      <a class="btn primary" href="#board">看爆款榜</a>
+      <a class="btn" href="#plan">本周计划</a>
+      <a class="btn" href="#scripts">脚本库</a>
+      {% if data.weekly_rel %}<a class="btn" href="{{ data.weekly_rel }}">周报 Markdown</a>{% endif %}
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="top3">
+    <div class="sec-head">
+      <h2>今天先看这 3 条</h2>
+      <p>按播放、涨速、互动、粉丝突破综合排序</p>
+    </div>
+    <div class="grid3">
+      {% for v in data.top3 %}
+      <article class="top-card">
+        <div class="cover">
+          {% if v.cover_exists %}<img src="{{ v.cover_rel }}" alt="{{ v.title }}" loading="lazy">{% endif %}
+          <span class="rank-badge">TOP {{ loop.index }}</span>
+        </div>
+        <div class="body">
+          <span class="score-pill">{{ v.score }} 分</span>
+          {% if v.is_hot %}<span class="tag hot">爆款</span>{% endif %}
+          <h3><a href="{{ v.url }}" target="_blank" rel="noopener">{{ v.title }}</a></h3>
+          <div class="meta">{{ v.owner_name or "-" }} · 播放 {{ v.play_human }} · {{ v.like_human }} 赞</div>
+        </div>
+      </article>
+      {% else %}
+      <div class="empty">还没有抓取数据。先运行 <b>python -m bili_viral collect</b>，或让 agent 执行一次采集。</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="board">
+    <div class="sec-head">
+      <h2>爆款榜</h2>
+      <p>共 {{ data.videos|length }} 条 · 点击标题跳转 B站原视频</p>
+    </div>
+    <div class="toolbar">
+      <input class="search" id="search" type="search" placeholder="搜标题 / UP / 关键词 / 选题…" autocomplete="off">
+      <button class="chip active" data-filter="all">全部</button>
+      <button class="chip" data-filter="hot">只要爆款</button>
+      <button class="chip" data-filter="transcript">有字幕</button>
+      <button class="chip" data-filter="analyzed">已分析</button>
+      <select id="sort">
+        <option value="score">按爆款分</option>
+        <option value="play">按播放</option>
+        <option value="pubdate">按发布时间</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>封面</th><th>标题</th><th>播放</th><th>点赞</th><th>爆款分</th><th>选题</th><th>字幕</th>
+          </tr>
+        </thead>
+        <tbody id="board-body">
+          {% for v in data.videos %}
+          <tr class="video-row"
+              data-search="{{ v.search_blob }}"
+              data-hot="{{ 1 if v.is_hot else 0 }}"
+              data-transcript="{{ 1 if v.transcript_status == 'ok' else 0 }}"
+              data-analyzed="{{ 1 if v.analysis else 0 }}"
+              data-score="{{ v.score or 0 }}"
+              data-play="{{ v.play or 0 }}"
+              data-pubdate="{{ v.pubdate or 0 }}">
+            <td class="num">{{ loop.index }}</td>
+            <td>{% if v.cover_exists %}<img class="thumb" src="{{ v.cover_rel }}" alt="" loading="lazy">{% endif %}</td>
+            <td class="title-cell">
+              <a href="{{ v.url }}" target="_blank" rel="noopener">{{ v.title }}</a>
+              <div class="meta">{{ v.owner_name or "-" }} · {{ v.keyword_group or "-" }} · {{ v.pubdate_str }}</div>
+            </td>
+            <td class="num">{{ v.play_human }}</td>
+            <td class="num">{{ v.like_human }}</td>
+            <td class="num"><span class="score-pill">{{ v.score }}</span></td>
+            <td>{{ v.analysis.get('topic') or '-' }}</td>
+            <td>{% if v.transcript_status == 'ok' %}<span class="tag">字幕</span>{% else %}<span class="tag muted">无</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="topics">
+    <div class="sec-head">
+      <h2>选题灵感</h2>
+      <p>默认复刻爆款结构：保留选题、钩子、段落和镜头，重写口播，用自己的素材</p>
+    </div>
+    <div class="cards">
+      {% for t in data.topics %}
+      <article class="topic-card">
+        <span class="tag">选题 {{ loop.index }}</span>
+        <h3>{{ t.topic }}</h3>
+        {% if t.angle %}<p>{{ t.angle }}</p>{% endif %}
+        <ul>
+          {% for w in t.why[:3] %}<li>{{ w }}</li>{% endfor %}
+        </ul>
+        <div class="ref-line">参考：<a href="{{ t.url }}" target="_blank" rel="noopener">{{ t.title }}</a> · {{ t.play_human }} 播放 · {{ t.score }} 分</div>
+      </article>
+      {% else %}
+      <div class="empty">还没有 AI 分析。运行 <b>python -m bili_viral analyze-pack</b> 生成分析任务包，再把 agent 输出放到 <b>data/analysis/</b>。</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="covers">
+    <div class="sec-head">
+      <h2>封面拆解</h2>
+      <p>先看别人的封面为什么能点，再用模板生成自己的</p>
+    </div>
+    <div class="cover-grid">
+      {% for s in data.sheets %}
+      <div class="sheet">
+        <img src="{{ s.path }}" alt="封面接触表 {{ s.name }}" loading="lazy">
+        <div class="cap">{{ s.name }} · 每张 6 条，按序号对应榜单</div>
+      </div>
+      {% endfor %}
+      {% if not data.sheets %}
+      <div class="empty">运行一次 <b>collect</b> 后，这里会出现爆款封面接触表；封面下载在 <b>output/covers/library/</b>。</div>
+      {% endif %}
+    </div>
+    <div class="cards" style="margin-top:16px">
+      {% for f in data.formulas %}
+      <article class="formula-card">
+        <h3>{{ f.get('name') or '封面公式' }}</h3>
+        <div class="when">{{ f.get('when') or '' }}</div>
+        <dl>
+          <dt>构图</dt><dd>{{ f.get('layout') or '-' }}</dd>
+          <dt>大字</dt><dd>{{ f.get('text') or '-' }}</dd>
+          <dt>配色</dt><dd>{{ f.get('color') or '-' }}</dd>
+          <dt>示例</dt><dd>{{ f.get('example') or '-' }}</dd>
+        </dl>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="scripts">
+    <div class="sec-head">
+      <h2>脚本库</h2>
+      <p>每条都带原片 BV、复刻说明与事实核查清单</p>
+    </div>
+    <div class="script-list">
+      {% for s in data.scripts %}
+      <div class="script-card">
+        <div>
+          <div class="s-title">{{ s.title }}</div>
+          <div class="s-meta">{{ s.day or '' }} {% if s.topic %}· {{ s.topic }}{% endif %} {% if s.chars %}· {{ s.chars }} 字{% endif %}</div>
+        </div>
+        <div class="s-links">
+          {% if s.html_rel %}<a class="btn" href="{{ s.html_rel }}">读脚本</a>{% endif %}
+          {% if s.md_rel %}<a class="btn" href="{{ s.md_rel }}">Markdown</a>{% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty">还没有脚本。先跑 <b>python -m bili_viral analyze-pack</b>，让 agent 按 <b>.dsh/skills/bilibili-viral/</b> 生成周计划与脚本。</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="plan">
+    <div class="sec-head">
+      <h2>本周计划</h2>
+      <p>周一只排 5 条，拍完再优化</p>
+    </div>
+    {% if data.has_plan %}
+    <div class="plan-banner">
+      <div>
+        <h3>{{ data.plan.get('week') or '本周' }} · {{ data.plan.get('theme') or '5 条可拍内容' }}</h3>
+        <p>{{ data.plan.get('summary') or '按下面的顺序拍，先完成再完美。' }}</p>
+      </div>
+      {% if data.weekly_rel %}<a class="btn primary" href="{{ data.weekly_rel }}">打开完整周报</a>{% endif %}
+    </div>
+    <div class="table-wrap">
+      <table class="plan-table">
+        <thead><tr><th>天</th><th>选题</th><th>标题候选</th><th>脚本</th><th>封面</th></tr></thead>
+        <tbody>
+          {% for idea in data.plan.get('ideas', []) %}
+          <tr>
+            <td class="num">{{ idea.get('day') or '-' }}</td>
+            <td><b>{{ idea.get('topic') or '-' }}</b>{% if idea.get('clone_of') %}<div class="meta">复刻自 {{ idea.get('clone_of') }}{% if idea.get('source_title') %} · {{ idea.get('source_title') }}{% endif %}</div>{% endif %}<div class="meta">{{ idea.get('hook') or '' }}</div></td>
+            <td>{% for t in idea.get('title_options', []) %}{{ loop.index }}. {{ t }}<br>{% endfor %}</td>
+            <td>{% if idea.get('script_rel') %}<a href="{{ idea.get('script_rel') }}">读脚本</a>{% else %}-{% endif %}</td>
+            <td>
+              <img class="plan-cover" src="../covers/generated/{{ data.plan.get('week') }}/{{ idea.get('id') }}-v1.jpg" alt="封面 v1" loading="lazy" onerror="this.style.display='none'">
+              <img class="plan-cover" src="../covers/generated/{{ data.plan.get('week') }}/{{ idea.get('id') }}-v2.jpg" alt="封面 v2" loading="lazy" onerror="this.style.display='none'">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty">
+      <b>还没有本周计划。</b><br>
+      先采集数据，再运行 <b>python -m bili_viral analyze-pack</b>，按 SKILL 的流程让 agent 生成 <b>data/plans/&lt;周&gt;.json</b> 与 5 份脚本。
+    </div>
+    {% endif %}
+  </section>
+
+  <section id="ops">
+    <div class="sec-head">
+      <h2>运行状态</h2>
+      <p>出问题时先看这里：登录、字幕覆盖率、最近一次采集</p>
+    </div>
+    <div class="ops-grid">
+      <div class="ops-card">
+        <h3 style="margin:0 0 10px;font-size:17px">最近运行</h3>
+        {% for r in data.runs %}
+        <div class="run-row">
+          <div>
+            <div>{{ r.get('started_at') or '-' }}</div>
+            <div class="meta">{{ r.get('window_days') or '-' }} 天窗口 · {{ (r.get('counts') or {}).get('fetched', '-') }} 抓取 / {{ (r.get('counts') or {}).get('kept', '-') }} 入榜</div>
+          </div>
+          <div class="run-status {{ r.get('status') or '' }}">{{ r.get('status') or '-' }}</div>
+        </div>
+        {% else %}
+        <div class="empty">还没有运行记录。</div>
+        {% endfor %}
+      </div>
+      <div class="ops-card">
+        <h3 style="margin:0 0 10px;font-size:17px">内容方向分布</h3>
+        <div class="bars">
+          {% for group, count in data.group_counts.items() %}
+          <div class="bar-row">
+            <span>{{ group }}</span>
+            <span class="bar"><i style="width: {{ (count / (data.videos|length or 1) * 100)|round(1) }}%"></i></span>
+            <span>{{ count }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="meta" style="margin-top:14px">字幕覆盖：{{ data.stats.with_transcript }} / {{ data.stats.videos }}。没有字幕的视频不会阻塞榜单，只标记为“无”。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="sec-head"><h2>怎么用</h2><p>每天 2 分钟，周一 20 分钟</p></div>
+    <div class="how">
+      <div class="step"><b>每天 09:00</b><br>自动采集近 2 天爆款，更新榜单、字幕和封面接触表。你只需要扫一眼 TOP3。</div>
+      <div class="step"><b>周一</b><br>agent 生成 5 条选题、5 份脚本、10 张封面。先选 5 条能拍的，不追求完美。</div>
+      <div class="step"><b>发布后 24h</b><br>把播放、完播、收藏、评论关键词记到 <b>data/knowledge/</b>，下周计划会引用。</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>B站爆款雷达 · 本地运行 · 数据来自 B站公开接口 · 发布前请人工复核事实、版权与平台规则</div>
+    <div class="footer-links">
+      <a href="#board">爆款榜</a><a href="#topics">选题</a><a href="#covers">封面</a><a href="#scripts">脚本</a><a href="#plan">周计划</a>
+      {% for d in data.daily %}<a href="{{ d.rel }}">{{ d.name }} 日报</a>{% endfor %}
+      {% for w in data.weekly_files %}<a href="{{ w.rel }}">{{ w.name }} 周报</a>{% endfor %}
+    </div>
+  </div>
+</footer>
+
+<script>
+const DATA = {{ data_json|safe }};
+(function () {
+  const rows = Array.from(document.querySelectorAll('.video-row'));
+  const search = document.getElementById('search');
+  const sort = document.getElementById('sort');
+  const chips = Array.from(document.querySelectorAll('[data-filter]'));
+  let activeFilter = 'all';
+
+  function matches(row, q) {
+    if (q && !(row.dataset.search || '').includes(q)) return false;
+    if (activeFilter === 'hot' && row.dataset.hot !== '1') return false;
+    if (activeFilter === 'transcript' && row.dataset.transcript !== '1') return false;
+    if (activeFilter === 'analyzed' && row.dataset.analyzed !== '1') return false;
+    return true;
+  }
+
+  function apply() {
+    const q = (search.value || '').trim().toLowerCase();
+    rows.forEach(row => { row.style.display = matches(row, q) ? '' : 'none'; });
+  }
+
+  function sortRows() {
+    const key = sort.value;
+    rows.sort((a, b) => {
+      const av = Number(a.dataset[key] || 0);
+      const bv = Number(b.dataset[key] || 0);
+      return bv - av;
+    });
+    const body = document.getElementById('board-body');
+    rows.forEach(row => body.appendChild(row));
+  }
+
+  search.addEventListener('input', apply);
+  sort.addEventListener('change', sortRows);
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      apply();
+    });
+  });
+})();
+</script>
+</body>
+</html>

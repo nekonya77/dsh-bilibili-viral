@@ -1,0 +1,55 @@
+{
+  "name": "dsh-bilibili-viral",
+  "version": "0.1.0",
+  "description": "Bilibili viral-content radar skill for DeepSeek Harness: keyword trends, transcript and cover analysis, weekly clone plan with scripts and covers.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "skills",
+    "bili_viral",
+    "config.yaml",
+    "requirements.txt",
+    "scripts",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "assets",
+    "screenshots.json"
+  ],
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -v",
+    "validate": "node scripts/validate-bundle.mjs",
+    "pack:check": "npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "bilibili",
+    "content-marketing",
+    "agent-skill",
+    "python"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clair0314/dsh-bilibili-viral.git"
+  },
+  "homepage": "https://github.com/clair0314/dsh-bilibili-viral#readme",
+  "bugs": {
+    "url": "https://github.com/clair0314/dsh-bilibili-viral/issues"
+  },
+  "author": "clair0314",
+  "license": "MIT"
+}

@@ -1,0 +1,40 @@
+# B站爆款雷达 · {{ date }}
+
+> 今日抓取 **{{ total }}** 条入榜视频，其中 **{{ subtitle_count }}** 条已拿到字幕。自动生成，发布前请人工复核事实与合规。
+
+## 今日爆款榜
+
+| # | 封面 | 标题 | UP | 播放 | 互动 | 爆款分 | 选题 |
+|---|------|------|----|------|------|--------|------|
+{% for v in items -%}
+| {{ loop.index }} | ![]({{ v.cover_rel }}) | [{{ v.title }}]({{ v.url }}) | {{ v.owner_name or "-" }} | {{ v.play_human }} | {{ v.like_human }} 赞 | {{ v.score }} | {{ v.analysis.topic or "-" }} |
+{% endfor %}
+
+## 观众为什么买单（AI 拆解）
+
+{% for v in items[:6] -%}
+### {{ loop.index }}. {{ v.title }}
+
+- **视频**：[{{ v.bvid }}]({{ v.url }}) ｜ **UP**：{{ v.owner_name or "-" }} ｜ **播放**：{{ v.play_human }}
+- **选题**：{{ v.analysis.topic or "待分析" }}
+- **爆点**：{% if v.why %}{{ v.why | join("；") }}{% else %}待分析{% endif %}
+- **封面套路**：{% if v.analysis.cover %}{{ v.analysis.cover.style or "" }} {{ v.analysis.cover.why or "" }}{% else %}待分析{% endif %}
+{% if v.analysis.hook %}- **开头钩子**：{{ v.analysis.hook }}{% endif %}
+{% if v.analysis.remake_angle %}- **可复刻角度**：{{ v.analysis.remake_angle }}{% endif %}
+{% if v.analysis.scores %}- **评分**：选题 {{ v.analysis.scores.topic or "-" }} / 封面 {{ v.analysis.scores.cover or "-" }} / 脚本 {{ v.analysis.scores.script or "-" }} / 制作难度 {{ v.analysis.scores.production or "-" }}{% endif %}
+
+{% endfor %}
+
+## 今日信号词
+
+{% if trend -%}
+{% for term, count in trend %}`{{ term }}`({{ count }}){% if not loop.last %} · {% endif %}{% endfor %}
+{% else -%}
+暂无足够标签数据。
+{% endif %}
+
+## 建议动作
+
+1. 从上方榜单挑 2-3 条，打开字幕文件核对“爆点”是否真实，而不是只看标题。
+2. 把可复刻角度记到 `data/knowledge/ideas.md`，周一生成周计划时优先使用。
+3. 若连续 3 天同一信号词出现，说明是结构性机会，而不只是单条爆款。

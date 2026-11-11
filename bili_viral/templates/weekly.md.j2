@@ -1,0 +1,79 @@
+# 本周拍摄计划 · {{ week }}
+
+> 目标：5 条可拍内容，默认走“爆款复刻模式”：保留原片的选题、标题结构、开头钩子、内容段落和镜头顺序，重写口播、用自己的素材。发布前请核对事实、版权与平台规则。
+
+## 本周总览
+
+| 天 | 选题 | 核心钩子 | 制作难度 | 脚本 | 封面 |
+|----|------|----------|----------|------|------|
+{% for idea in ideas -%}
+| {{ idea.day }} | {{ idea.topic }} | {{ idea.hook or "-" }} | {{ idea.difficulty or "-" }} | [脚本]({{ idea.script_rel }}) | [v1]({{ idea.cover_v1 }}) / [v2]({{ idea.cover_v2 }}) |
+{% endfor %}
+
+## 选题拆解
+
+{% for idea in ideas -%}
+### {{ idea.day }} · {{ idea.topic }}
+
+{% if idea.clone_of %}> 复刻自 [{{ idea.clone_of }}](https://www.bilibili.com/video/{{ idea.clone_of }}){% if idea.source_title %} · {{ idea.source_title }}{% endif %}{% if idea.fidelity %} · {{ idea.fidelity }}{% endif %}
+
+{% endif %}**标题候选**
+
+{% for title in idea.title_options -%}
+{{ loop.index }}. {{ title }}
+{% endfor %}
+
+**开场钩子（前 3 秒）**：{{ idea.hook or "-" }}
+
+**复刻说明**：{{ idea.angle or idea.why_now or "-" }}
+
+**结构**
+
+{% if idea.outline -%}
+{% for step in idea.outline -%}
+{{ loop.index }}. {{ step }}
+{% endfor %}
+{% else -%}
+待补充。
+{% endif %}
+
+**竞品参考**
+
+{% if idea.ref_items -%}
+{% for ref in idea.ref_items -%}
+- [{{ ref.title }}]({{ ref.url }}) ｜ {{ ref.owner_name or "-" }} ｜ 播放 {{ ref.play_human }} ｜ 爆款分 {{ ref.score }}
+  - 复刻点：{{ ref.analysis.remake_angle or ref.analysis.topic or "看它的开头与信息密度" }}
+{% endfor %}
+{% else -%}
+待补充。
+{% endif %}
+
+**封面**
+
+![封面 v1]({{ idea.cover_v1 }})
+![封面 v2]({{ idea.cover_v2 }})
+
+封面大字：{{ idea.cover_title }}
+
+**口播脚本**：[打开脚本]({{ idea.script_rel }}) ｜ 目标 3-6 分钟，900-1800 字，至少引用 2 个竞品 BV。
+
+**事实核查清单**
+
+{% if idea.fact_checks -%}
+{% for check in idea.fact_checks -%}
+- [ ] {{ check }}
+{% endfor %}
+{% else -%}
+- [ ] 工具名称、价格、版本号是否仍有效
+- [ ] 录屏中的账号/隐私信息是否已打码
+- [ ] 是否存在“保证收益/稳赚”等违规表述
+{% endif %}
+
+{% endfor %}
+
+## 发布节奏
+
+- 周一/周二：拍第 1、2 条（优先“教程型”，便于录屏）
+- 周三/周四：拍第 3、4 条（优先“对比/实测型”）
+- 周五：拍第 5 条（优先“观点/复盘型”），周末留出互动时间
+- 每条发布后 24 小时记录：播放、完播、点赞、收藏、评论关键词；下周计划会引用这些数据。
