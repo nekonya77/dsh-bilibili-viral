@@ -1,6 +1,6 @@
 # B站爆款内容雷达 · dsh-bilibili-viral
 
-> 🐧 **AI 学习群：1132348296**（在 QQ 里搜群号就能加）— 每周的爆款选题、封面模板、脚本写法，群里先发。
+> 🐧 **AI 学习群 1132348296** · niko 在这儿，插件我写、方向我找、坑我踩。 每周的爆款选题、封面模板、脚本写法，群里先发。
 
 ![爆款雷达演示：抓榜单，拆标题和封面](docs/demo.gif)
 
@@ -14,7 +14,7 @@
 
 每天抓取 B站「AI 工具 / 效率实操 / 副业搞钱 / 个人 IP」赛道的爆款视频，拆解**标题、选题、封面、脚本**，每周生成 **5 条可拍内容 + 10 张封面 + 本地仪表盘**。
 
-[![CI](https://github.com/clair0314/dsh-bilibili-viral/actions/workflows/ci.yml/badge.svg)](https://github.com/clair0314/dsh-bilibili-viral/actions/workflows/ci.yml)
+[![CI](https://github.com/nekonya77/dsh-bilibili-viral/actions/workflows/ci.yml/badge.svg)](https://github.com/nekonya77/dsh-bilibili-viral/actions/workflows/ci.yml)
 
 ![dashboard](assets/screenshot-dashboard.png)
 
@@ -56,13 +56,13 @@
 需要 DSH 和 `pnpm`：
 
 ```bash
-dsh plugin --profile web add github:clair0314/dsh-bilibili-viral
+dsh plugin --profile web add github:nekonya77/dsh-bilibili-viral
 ```
 
 安装后技能 `bilibili-viral` 会出现在 DSH 的技能目录里。插件只负责注册技能；Python 运行环境仍需克隆仓库并 bootstrap：
 
 ```bash
-git clone https://github.com/clair0314/dsh-bilibili-viral.git ~/.bili-viral
+git clone https://github.com/nekonya77/dsh-bilibili-viral.git ~/.bili-viral
 cd ~/.bili-viral
 bash scripts/bootstrap.sh
 ```
@@ -70,7 +70,7 @@ bash scripts/bootstrap.sh
 ### 方式 B：本地克隆（推荐首次使用）
 
 ```bash
-git clone https://github.com/clair0314/dsh-bilibili-viral.git ~/.bili-viral
+git clone https://github.com/nekonya77/dsh-bilibili-viral.git ~/.bili-viral
 cd ~/.bili-viral
 bash scripts/bootstrap.sh
 ```
